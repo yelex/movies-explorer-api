@@ -20,6 +20,7 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
 
 require('dotenv').config();
 
+const { NODE_ENV } = process.env;
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 app.use(express.json());
@@ -27,7 +28,7 @@ app.use(requestLogger); // подключаем логгер запросов
 
 // CORS
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', NODE_ENV === 'production' ? 'https://yellex.nomoredomains.work' : 'http://localhost:3000');
   res.header('Access-Control-Allow-Credentials', 'true');
   const { method } = req; // Сохраняем тип запроса (HTTP-метод) в соответствующую переменную
 
