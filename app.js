@@ -11,8 +11,7 @@ const moviesRouter = require('./routes/movies');
 const NotFoundError = require('./errors/not-found');
 const { login, createUser, signOut } = require('./controllers/users');
 
-// Слушаем 3000 порт
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 
 const app = express();
 
