@@ -39,13 +39,13 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId).then(
     (movie) => {
       if (!movie) {
-        throw Error('404');
+        throw new NotFoundError('Фильм не найден');
       }
 
       if (req.user._id !== movie.owner.toString()) {
-        throw Error('403');
+        throw new ForbiddenError('Недостаточно прав');
       }
-      return Movie.findByIdAndRemove(req.params.movieId);
+      return movie.remove();
     },
   ).then(
     (movie) => {
@@ -56,16 +56,7 @@ module.exports.deleteMovie = (req, res, next) => {
       next(new BadRequestError('Переданы некорректные данные'));
       return;
     }
-    if (err.message === '404') {
-      next(new NotFoundError('Фильм не найден'));
-      return;
-    }
 
-    if (err.message === '403') {
-      next(new ForbiddenError('Недостаточно прав'));
-      return;
-    }
-
-    next(new InternalError('На сервере произошла ошибка'));
+    next(err);
   });
 };

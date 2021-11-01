@@ -30,17 +30,13 @@ module.exports.updateUserProfile = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        throw Error('404');
+        throw new NotFoundError('Пользователь не найден');
       }
       res.send({
         name, email,
       });
     })
     .catch((err) => {
-      if (err.message === '404') {
-        next(new NotFoundError('Пользователь не найден'));
-        return;
-      }
       if (err.name === 'MongoServerError' && err.code === 11000) {
         next(new ConflictError('Такой e-mail уже существует'));
         return;
@@ -50,7 +46,7 @@ module.exports.updateUserProfile = (req, res, next) => {
         return;
       }
 
-      next(new InternalError('На сервере произошла ошибка'));
+      next(err);
     });
 };
 
@@ -80,10 +76,10 @@ module.exports.createUser = (req, res, next) => {
           next(new ConflictError('Такой e-mail уже существует'));
           return;
         }
-        next(new InternalError('На сервере произошла ошибка'));
+        next(err);
       });
-  }).catch(() => {
-    next(new InternalError('На сервере произошла ошибка'));
+  }).catch((err) => {
+    next(err);
   });
 };
 
