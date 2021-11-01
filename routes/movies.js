@@ -34,14 +34,14 @@ moviesRouter.post('/', celebrate({
       }
       return value;
     }),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().required(),
 
   }),
 }), createMovie);
 
 moviesRouter.delete('/:movieId', celebrate({
   params: {
-    movieId: Joi.string().required(),
+    movieId: Joi.string().length(24).hex(),
   },
 }), deleteMovie);
 
