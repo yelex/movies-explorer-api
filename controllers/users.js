@@ -97,8 +97,8 @@ module.exports.login = (req, res, next) => {
           secure: true,
         }).send({ token });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Неверный логин и/или пароль'));
+    .catch((e) => {
+      next(new UnauthorizedError(e.message));
     });
 };
 
