@@ -86,6 +86,8 @@ module.exports.createUser = (req, res, next) => {
         }
         next(new InternalError('На сервере произошла ошибка'));
       });
+  }).catch(() => {
+    next(new InternalError('На сервере произошла ошибка'));
   });
 };
 
