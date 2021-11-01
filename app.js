@@ -18,7 +18,7 @@ require('dotenv').config();
 
 const { NODE_ENV } = process.env;
 
-mongoose.connect(`mongodb://${NODE_ENV === 'production' ? '10.128.0.4' : 'localhost'}:27017/bitfilmsdb`);
+mongoose.connect(`mongodb://${NODE_ENV === 'production' ? 'api.yellex.nomoredomains.work' : 'localhost'}:27017/bitfilmsdb`);
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
