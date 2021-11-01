@@ -14,12 +14,12 @@ const NotFoundError = require('./errors/not-found');
 const { PORT = 3001 } = process.env;
 
 const app = express();
-
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
-
 require('dotenv').config();
 
 const { NODE_ENV } = process.env;
+
+mongoose.connect(`mongodb://${NODE_ENV === 'production' ? '62.84.115.39' : 'localhost'}:27017/bitfilmsdb`);
+
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 app.use(express.json());
