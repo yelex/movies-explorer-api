@@ -26,10 +26,6 @@ module.exports.getInfoAboutMe = (req, res, next) => {
 
 module.exports.updateUserProfile = (req, res, next) => {
   const { name, email } = req.body;
-  if (!name || !email) {
-    next(new BadRequestError('Переданы некорректные данные'));
-    return;
-  }
 
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
