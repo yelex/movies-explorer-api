@@ -16,9 +16,9 @@ const { PORT = 3001 } = process.env;
 const app = express();
 require('dotenv').config();
 
-const { NODE_ENV } = process.env;
+const { NODE_ENV, MONGO_URL } = process.env;
 
-mongoose.connect(`mongodb://${NODE_ENV === 'production' ? 'api.yellex.nomoredomains.work' : 'localhost'}:27017/bitfilmsdb`);
+mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : 'mongodb://localhost:27017/bitfilmsdb');
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
