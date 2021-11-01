@@ -26,6 +26,10 @@ module.exports.getInfoAboutMe = (req, res, next) => {
 
 module.exports.updateUserProfile = (req, res, next) => {
   const { name, email } = req.body;
+  if (!name || !email) {
+    next(new BadRequestError('Переданы некорректные данные'));
+    return;
+  }
 
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .then((user) => {
@@ -41,7 +45,10 @@ module.exports.updateUserProfile = (req, res, next) => {
         next(new NotFoundError('Пользователь не найден'));
         return;
       }
-
+      if (err.name === 'MongoServerError' && err.code === 11000) {
+        next(new ConflictError('Такой e-mail уже существует'));
+        return;
+      }
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
         return;
