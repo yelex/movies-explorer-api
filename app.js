@@ -48,7 +48,7 @@ app.use(usersRouter);
 app.use(moviesRouter);
 
 app.all('*', (req, res, next) => {
-  next(new NotFoundError('Ресурс не найден'));
+  next(new NotFoundError('Страница по указанному маршруту не найдена.'));
 });
 
 app.use(errorLogger);
@@ -61,7 +61,7 @@ app.use((err, req, res, next) => {
     .status(statusCode)
     .send({
       message: statusCode === 500
-        ? 'На сервере произошла ошибка'
+        ? 'На сервере произошла ошибка.'
         : message,
     });
   next();
