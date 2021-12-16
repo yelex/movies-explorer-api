@@ -1,7 +1,6 @@
 const Movie = require('../models/movie');
 const NotFoundError = require('../errors/not-found'); // 404
 const InternalError = require('../errors/internal-err'); // 500
-const ForbiddenError = require('../errors/forbidden'); // 403
 const BadRequestError = require('../errors/bad-request'); // 400
 
 module.exports.getMovies = (req, res, next) => Movie.find({ owner: req.user._id })
@@ -36,14 +35,10 @@ module.exports.createMovie = (req, res, next) => Movie.create({
   });
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId).then(
+  Movie.findOne({ movieId: req.params.movieId, owner: req.user._id }).then(
     (movie) => {
       if (!movie) {
-        throw new NotFoundError('Фильм не найден');
-      }
-
-      if (req.user._id !== movie.owner.toString()) {
-        throw new ForbiddenError('Недостаточно прав');
+        throw new NotFoundError('Фильм не найден или недостаточно прав');
       }
       return movie.remove();
     },
