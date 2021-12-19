@@ -60,12 +60,19 @@ module.exports.createUser = (req, res, next) => {
       name, email, password: hash,
     })
       .then((user) => {
+        const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
         const {
           _id,
         } = user;
-        res.send({
-          name, email, _id,
-        });
+        res
+          .cookie('jwt', token, {
+            httpOnly: true,
+            maxAge: 3600000 * 24 * 7,
+            sameSite: false,
+            secure: NODE_ENV === 'production',
+          }).send({
+            name, email, _id,
+          });
       })
       .catch((err) => {
         if (err.name === 'ValidationError') {
